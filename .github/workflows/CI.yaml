@@ -1,0 +1,53 @@
+name: Go
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+    # Runner
+    runs-on: ubuntu-latest
+
+    # Add Postgres Services ( Services is like container inside runner)
+    services:
+      postgres:
+        image: postgres:17
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: mypassword
+          POSTGRES_DB: simple_bank
+
+    # Step
+    steps:
+    # Action
+    - uses: actions/checkout@v4
+
+    # Set up Go
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20'
+    
+    # Install migrate cli
+    - name: Install migrate cli
+      run: |
+        curl -L https://github.com/golang-migrate/migrate/releases/download/v4.19.1/migrate.linux-386.tar.gz | tar xvz
+        sudo mv ./migrate /usr/bin/migrate
+
+    # Install Make
+    - name: Install Make
+      run: sudo apt-get update -y && sudo apt-get install -y make
+
+    # Run database migration
+    - name: Run migration
+      run: make migrateup
+    
+    # Run test
+    - name: Test
+      run: go test -v ./...
