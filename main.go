@@ -5,8 +5,8 @@ import (
 	"log"
 
 	_ "github.com/lib/pq"
+	api "github.com/piyapong-mun/simplebank/api"
 	db "github.com/piyapong-mun/simplebank/db/sqlc"
-	api "github.com/piyapong-mun/simplebank/server"
 	"github.com/piyapong-mun/simplebank/util"
 )
 

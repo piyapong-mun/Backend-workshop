@@ -2,7 +2,6 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -25,7 +24,6 @@ func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 			return
 		}
 
-		fmt.Println("check authorization header format:")
 		fields := strings.Fields(authHeader)
 		if len(fields) < 2 {
 			err := errors.New("invalid authorization header format")
@@ -33,22 +31,18 @@ func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 			return
 		}
 
-		fmt.Println("check authorization type:")
 		if strings.ToLower(fields[0]) != authorizationTypeBearer {
 			err := errors.New("unsupported authorization type")
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, responseError(err))
 			return
 		}
 
-		fmt.Println("check access token:", fields[1])
 		accessToken, err := tokenMaker.VerifyToken(fields[1])
 		if err != nil {
 			err := errors.New("invalid access token")
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, responseError(err))
 			return
 		}
-
-		fmt.Println("access token is valid:", accessToken.Username)
 
 		ctx.Set(authorizationPayloadKey, accessToken)
 		ctx.Next()
