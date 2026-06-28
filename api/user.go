@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	pq "github.com/lib/pq"
 	db "github.com/piyapong-mun/simplebank/db/sqlc"
-	"github.com/piyapong-mun/simplebank/token"
 	"github.com/piyapong-mun/simplebank/util"
 )
 
@@ -32,13 +31,6 @@ func (server *Server) createUser(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, responseError(err))
-		return
-	}
-
-	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	if authPayload.Username != "admin" {
-		err := fmt.Errorf("only admin is allowed to perform this action")
-		ctx.JSON(http.StatusForbidden, responseError(err))
 		return
 	}
 

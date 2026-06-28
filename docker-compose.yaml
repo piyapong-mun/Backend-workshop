@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:18.4-alpine
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_DB=simple_bank
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_SOURCE=postgresql://root:mypassword@postgres:5432/simple_bank?sslmode=disable
+    depends_on:
+      - postgres
+    entrypoint: ["./wait-for.sh", "postgres:5432", "--", "./start.sh"]
+    command: ["./main"]

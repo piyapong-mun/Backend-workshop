@@ -36,6 +36,7 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 
 	// Users
 	router.POST("/user/login", server.loginUser)
+	router.POST("/users", server.createUser)
 
 	routerGroup := router.Group("/").Use(authMiddleware(tokenMaker))
 
@@ -56,9 +57,6 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 
 	// TransferMoney (transactional)
 	routerGroup.POST("/transfermoney", server.transferMoney)
-
-	// Users
-	routerGroup.POST("/users", server.createUser)
 
 	return server, nil
 }
