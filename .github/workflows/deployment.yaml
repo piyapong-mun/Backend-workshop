@@ -3,8 +3,6 @@ name: Deploy
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 permissions:
   id-token: write   # This is required for requesting the JWT
@@ -15,6 +13,7 @@ jobs:
   build:
     # Runner
     runs-on: ubuntu-latest
+    environment: AWS
 
     # Step
     steps:
