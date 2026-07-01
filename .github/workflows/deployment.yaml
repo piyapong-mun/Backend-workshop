@@ -23,11 +23,11 @@ jobs:
 
     - name: Set up app.env
       run: |
-        echo "$DB_DRIVER" > app.env
-        echo "$DB_SOURCE" >> app.env
-        echo "$SERVER_ADDRESS" >> app.env
-        echo "$SECRET_KEY" >> app.env
-        echo "$TOKEN_DURATION" >> app.env
+        echo ${{ secrets.DB_DRIVER }} > app.env
+        echo ${{ secrets.DB_SOURCE }} >> app.env
+        echo ${{ secrets.SERVER_ADDRESS }} >> app.env
+        echo ${{ secrets.SECRET_KEY }} >> app.env
+        echo ${{ secrets.TOKEN_DURATION }} >> app.env
         cat app.env
 
     - name: Configure AWS credentials
