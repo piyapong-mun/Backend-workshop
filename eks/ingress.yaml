@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: nginx # Class name
+spec:
+  controller: k8s.io/ingress-nginx # Class นี้จะใช้ Ingress Controller ชื่อ nginx
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: simple-bank-ingress
+  annotations:
+    # 🌟 จุดสำคัญ: สั่งบอกให้ cert-manager ใช้ ClusterIssuer ชื่อ letsencrypt มาจัดการ
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: nginx # Ingress นี้เป็นของ Class nginx 
+  
+  # 🌟 จุดสำคัญ: เปิดใช้งาน TLS และระบุโดเมนพร้อมชื่อ Secret ที่ต้องการให้เก็บคีย์
+  tls:
+  - hosts:
+    - api.simple-bank.org
+    # เก็บ Certificate,และ Private Key (Key ถอดรหัสสำหรับ Cer นี้)
+    secretName: simple-bank-api-cert
+  
+  rules:
+  - host: api.simple-bank.org # Domain ของเรา
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: simplebank-backend
+            port:
+              number: 80

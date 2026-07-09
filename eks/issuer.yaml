@@ -1,0 +1,23 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+spec:
+  acme:
+    # URL สำหรับขอใบรับรองจริงที่ได้รับการรับรองจาก Browser ทั่วโลก
+    server: https://acme-v02.api.letsencrypt.org/directory
+    #====================================================================
+    # ส่วนเหมือการสร้าง Account ของเรากับ Let'sencrypt
+    # ทำให้เราสามารถ Revoke Certificate ที่หลังได้โดยที่ Let'sEncrypt รู้ว่าเป็นคนทำจริงๆ 
+    email: techschool.guru@gmail.com
+    # ชื่อ Secret สำหรับเก็บ Private Key ของ Account ผู้ขอใบรับรองนี้
+    privateKeySecretRef:
+	  # นี้ไม่ใช่ Private Key ที่ Sign Cer แต่เป็น การระบุ Accountของเรา
+	  # เพราะ Let'sEncrypt ไม่มีระบบ Login
+      name: letsencrypt-account-private-key
+    #====================================================================
+    solvers:
+    - http01:
+        ingress:
+          # ระบุ Ingress ไหน ต้องใช้ จาก ingress.yaml
+          ingressClassName: nginx

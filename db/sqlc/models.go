@@ -25,6 +25,17 @@ type Entry struct {
 	CreatedAt time.Time
 }
 
+type Session struct {
+	ID           uuid.UUID
+	Username     string
+	RefreshToken string
+	UserAgent    string
+	ClientIp     string
+	IsBlocked    bool
+	ExpiredAt    time.Time
+	CreatedAt    time.Time
+}
+
 type Transfer struct {
 	ID            uuid.UUID
 	FromAccountID uuid.UUID
