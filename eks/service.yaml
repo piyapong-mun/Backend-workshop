@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: simplebank-backend
 spec:
-  type: ClusterIP # ปรับให้เป็น ClusterIP เราจะเข้าถึง Service นี้ผ่าน Ingress เท่านั้น ไม่เปิดให้เข้าถึงจากภายนอกโดยตรง
+  type: LoadBalancer # ปรับให้เป็น ClusterIP เราจะเข้าถึง Service นี้ผ่าน Ingress เท่านั้น ไม่เปิดให้เข้าถึงจากภายนอกโดยตรง
   selector:
     app: simplebank-backend # จาก deployement.yaml
   ports:

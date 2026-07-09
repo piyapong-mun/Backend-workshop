@@ -12,8 +12,6 @@ spec:
     email: techschool.guru@gmail.com
     # ชื่อ Secret สำหรับเก็บ Private Key ของ Account ผู้ขอใบรับรองนี้
     privateKeySecretRef:
-	  # นี้ไม่ใช่ Private Key ที่ Sign Cer แต่เป็น การระบุ Accountของเรา
-	  # เพราะ Let'sEncrypt ไม่มีระบบ Login
       name: letsencrypt-account-private-key
     #====================================================================
     solvers:
