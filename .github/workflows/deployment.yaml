@@ -56,7 +56,7 @@ jobs:
         docker push -a $ECR_REGISTRY/$ECR_REPOSITORY
 
     - name: Set up kube config
-     run: |
+      run: |
        aws eks update-kubeconfig --region ap-southeast-2 --name simplebank-cluster
 
     - name: Deploy to EKS
