@@ -61,8 +61,8 @@ jobs:
 
     - name: Deploy to EKS
       run: |
-        kubectl apply -f deployment.yaml
-        kubectl apply -f service.yaml
-        kubectl apply -f ingress.yaml
-        kubectl apply -f issuer.yaml
-        kubectl apply -f aws-auth.yaml
+        kubectl apply -f ./eks/deployment.yaml
+        kubectl apply -f ./eks/service.yaml
+        kubectl apply -f ./eks/ingress.yaml
+        kubectl apply -f ./eks/issuer.yaml
+        kubectl apply -f ./eks/aws-auth.yaml
