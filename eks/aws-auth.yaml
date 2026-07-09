@@ -1,5 +1,5 @@
 # สร้าง User ใหม่ ที่ Map กับ IAM เพื่อให้ user นี้ใช้งาน kubectl ได้
-apiVersion: v1
+apiVersion: apps/v1
 kind: ConfigMap
 metadata:
   name: aws-auth
