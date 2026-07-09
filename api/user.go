@@ -76,8 +76,11 @@ type loginUserRequest struct {
 }
 
 type loginUserResponse struct {
-	AccessToken string `json:"access_token"`
-	User        userResponse
+	AccessToken           string `json:"access_token"`
+	TokenExpiredAt        string `json:"token_expired_at"`
+	RefreshToken          string `json:"refresh_token"`
+	RefreshTokenExpiredAt string `json:"refresh_token_expired_at"`
+	User                  userResponse
 }
 
 // Login
@@ -107,14 +110,47 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		return
 	}
 
-	accessToken, err := server.tokenMaker.CreateToken(user.Username, server.config.TokenDuration)
+	accessToken, tokenPayload, err := server.tokenMaker.CreateToken(user.Username, server.config.TokenDuration)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, responseError(err))
+		return
+	}
+
+	if tokenPayload == nil {
+		ctx.JSON(http.StatusInternalServerError, responseError(fmt.Errorf("failed to create token payload")))
+		return
+	}
+
+	refreshToken, refreshTokenPayload, err := server.tokenMaker.CreateToken(user.Username, server.config.RefreshTokenDuration)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, responseError(err))
+		return
+	}
+
+	if refreshTokenPayload == nil {
+		ctx.JSON(http.StatusInternalServerError, responseError(fmt.Errorf("failed to create token payload")))
+		return
+	}
+
+	session, err := server.store.CreateSessions(ctx, db.CreateSessionsParams{
+		ID:           refreshTokenPayload.ID,
+		Username:     user.Username,
+		RefreshToken: refreshToken,
+		UserAgent:    ctx.Request.UserAgent(),
+		ClientIp:     ctx.ClientIP(),
+		IsBlocked:    false,
+		ExpiredAt:    refreshTokenPayload.ExpiredAt,
+	})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, responseError(err))
 		return
 	}
 
 	response := loginUserResponse{
-		AccessToken: accessToken,
+		AccessToken:           accessToken,
+		TokenExpiredAt:        tokenPayload.ExpiredAt.String(),
+		RefreshToken:          refreshToken,
+		RefreshTokenExpiredAt: session.ExpiredAt.String(),
 		User: userResponse{
 			Username:         user.Username,
 			FullName:         user.FullName,

@@ -1,0 +1,52 @@
+# FOR Delete ALL AWS RESOURCES IN ACCOUNT
+# To save cost
+regions:
+  - ap-southeast-2 # ระบุ Region Sydney ที่คุณใช้งาน
+  - global
+
+blocklist: 
+  - "000000000000"
+
+accounts:
+  "952365419960": # 💡 แก้ไข: ครอบด้วยเครื่องหมายคำพูดเพื่อป้องกัน Error ของระบบ YAML
+    filters:
+      # 1. ป้องกัน ECR Repository ที่ต้องการเก็บไว้
+      ECRRepository:
+        - type: "exact"
+          value: "github/simple_bank" # ระบุชื่อ ECR ที่ต้องการเก็บไว้
+
+      # 2. ป้องกัน IAM Users ทั้งหมดไม่ให้โดนลบ
+      IAMUser:
+        - type: "glob"
+          value: "*"
+
+      # 3. ป้องกัน IAM User Access Keys ไม่ให้หลุด (ป้องกัน CLI ดับระหว่างรัน)
+      IAMUserAccessKey:
+        - type: "glob"
+          value: "*"
+
+      # 4. ป้องกัน IAM Groups ทั้งหมด
+      IAMGroup:
+        - type: "glob"
+          value: "*"
+
+      # 5. ป้องกันการปลด User ออกจาก Group หรือ ปลด Policy (Policy Attachments)
+      IAMUserPolicyAttachment:
+        - type: "glob"
+          value: "*"
+      IAMGroupPolicyAttachment:
+        - type: "glob"
+          value: "*"
+
+      # 6. ป้องกัน Custom IAM Policies ที่เราสร้างไว้เอง (ไม่ให้โดนลบโครงสร้าง Policy)
+      IAMPolicy:
+        - type: "glob"
+          value: "*"
+
+      # 7. ป้องกัน IAM Role ที่เรากำลังใช้อยู่หรือจำเป็นต้องมี
+      IAMRole:
+        - type: "glob"
+          value: "*"
+      IAMRolePolicyAttachment:
+        - type: "glob"
+          value: "*"

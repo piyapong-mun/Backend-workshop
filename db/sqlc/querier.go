@@ -14,6 +14,7 @@ type Querier interface {
 	AddAccountBalance(ctx context.Context, arg AddAccountBalanceParams) (Account, error)
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error)
 	CreateEntry(ctx context.Context, arg CreateEntryParams) (Entry, error)
+	CreateSessions(ctx context.Context, arg CreateSessionsParams) (Session, error)
 	CreateTransfers(ctx context.Context, arg CreateTransfersParams) (Transfer, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	// In commonly UPDATE will lock the database but still allow other transaction to query the data
@@ -25,6 +26,7 @@ type Querier interface {
 	GetAccount(ctx context.Context, id uuid.UUID) (Account, error)
 	GetAccountForUpdate(ctx context.Context, id uuid.UUID) (Account, error)
 	GetEntry(ctx context.Context, id uuid.UUID) (Entry, error)
+	GetSessions(ctx context.Context, id uuid.UUID) (Session, error)
 	GetTransfers(ctx context.Context, id uuid.UUID) (Transfer, error)
 	GetUser(ctx context.Context, username string) (User, error)
 	// Lock Database but still allow other transaction to query the data

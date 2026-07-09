@@ -1,0 +1,16 @@
+# สร้าง User ใหม่ ที่ Map กับ IAM เพื่อให้ user นี้ใช้งาน kubectl ได้
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapUsers: |
+    - userarn: arn:aws:iam::952365419960:user/admin
+      username: admin
+      groups:
+        - system:masters
+    - userarn: arn:aws:iam::952365419960:user/github-ci
+      username: github-ci
+      groups:
+        - system:masters
