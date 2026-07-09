@@ -57,7 +57,7 @@ jobs:
 
     - name: Set up kube config
       run: |
-       aws eks update-kubeconfig --region ap-southeast-2 --name simplebank-cluster
+       aws eks update-kubeconfig --region ap-southeast-2 --name simple-bank-cluster-01
 
     - name: Deploy to EKS
       run: |
